@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="f8705318-2d37-4894-baee-0055bc913447" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="onerrorpoc1Flow" doc:id="e1b99166-cb06-42d0-aee4-2c49253f863d" >
+		<http:listener doc:name="Listener" doc:id="f7b784cf-4eb2-4010-8f53-9a972e1c7517" config-ref="HTTP_Listener_config" path="test"/>
+		<logger level="INFO" doc:name="Logger" doc:id="12f47aaa-9c19-4044-882e-2bece81cb0ac" />
+		<logger level="INFO" doc:name="Logger" doc:id="fc3f0d1a-38aa-4781-a43a-dcdf9847f706" />
+		<try doc:name="Try" doc:id="23ecd745-09c4-433d-86f5-ed170d42927f" >
+			<validation:is-null doc:name="Is null" doc:id="cc04cb86-4e20-41c2-a018-be810174bdf5" value="#[payload]"/>
+			<error-handler >
+				<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="53f67ef2-2b9b-4192-9607-8d74038231a8" >
+					<set-payload value="I am inside Try" doc:name="Set Payload" doc:id="97750404-794c-4beb-8dd7-709ace814409" />
+				</on-error-continue>
+			</error-handler>
+		</try>
+		<set-payload value="Happy Mulesoft" doc:name="Set Payload" doc:id="3e8fd666-9eb8-4b5d-9051-8e2066811f2c" />
+		<error-handler >
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="b8773ee9-b3da-4292-a349-c8c962a2e1c0" >
+				<set-payload value="I am inside flow level error handling" doc:name="Set Payload" doc:id="c7220b3f-e0b2-48af-83a3-3ad30257cbea" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+</mule>
